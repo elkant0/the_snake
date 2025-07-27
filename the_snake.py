@@ -41,8 +41,12 @@ clock = pygame.time.Clock()
 
 # Тут опишите все классы игры.
 class GameObject:
+    '''Основной класс, в котором инициализируются главные атрибуты и методы,
+    которые будут применяться в дальнейшем.
+    '''
+    
     def __init__(self) -> None:
-        self.position = ((SCREEN_WIDTH // 2), (SCREEN_HEIGHT //2))
+        self.position = ((SCREEN_WIDTH // 2), (SCREEN_HEIGHT // 2)) # Задаем центр поля
         self.body_color = None
 
     def draw(self):
@@ -50,9 +54,21 @@ class GameObject:
 
 
 class Apple(GameObject):
+
     def __init__(self):
         super().__init__()
         self.body_color = APPLE_COLOR
+
+
+    def randomize_position(self):
+
+    """Генерирует случайную позицию для яблока на игровом поле.
+    Координаты выбираются кратными GRID_SIZE и находятся в пределах игрового поля.
+    """
+
+    x = randint(0, GRID_WIDTH - 1) * GRID_SIZE
+    y = randint(0, GRID_HEIGHT - 1) * GRID_SIZE
+    self.position = (x, y)
 
     def draw(self):
         rect = pygame.Rect(self.position, (GRID_SIZE, GRID_SIZE))
@@ -61,7 +77,32 @@ class Apple(GameObject):
 
 
 class Snake(GameObject):
-    pass
+    def __init__(self) -> None:
+        super().__init__()
+        self.last = None
+        self.lengh = 1
+        self.direction = RIGHT
+        self.next_direction = None
+        
+
+    # Метод draw класса Snake
+    def draw(self):
+        for position in self.positions[:-1]:
+            rect = (pygame.Rect(position, (GRID_SIZE, GRID_SIZE)))
+            pygame.draw.rect(screen, self.body_color, rect)
+            pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
+
+        # Отрисовка головы змейки
+        head_rect = pygame.Rect(self.positions[0], (GRID_SIZE, GRID_SIZE))
+        pygame.draw.rect(screen, self.body_color, head_rect)
+        pygame.draw.rect(screen, BORDER_COLOR, head_rect, 1)
+
+        # Затирание последнего сегмента
+        if self.last:
+            last_rect = pygame.Rect(self.last, (GRID_SIZE, GRID_SIZE))
+            pygame.draw.rect(screen, BOARD_BACKGROUND_COLOR, last_rect)
+        
+    
 
 
 # Функция обработки действий пользователя
@@ -79,6 +120,7 @@ def handle_keys(game_object):
                 game_object.next_direction = LEFT
             elif event.key == pygame.K_RIGHT and game_object.direction != LEFT:
                 game_object.next_direction = RIGHT
+
 
 def main():
     # Инициализация PyGame:
