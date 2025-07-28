@@ -59,16 +59,15 @@ class Apple(GameObject):
         super().__init__()
         self.body_color = APPLE_COLOR
 
-
     def randomize_position(self):
 
-    """Генерирует случайную позицию для яблока на игровом поле.
-    Координаты выбираются кратными GRID_SIZE и находятся в пределах игрового поля.
-    """
+        """Генерирует случайную позицию для яблока на игровом поле.
+        Координаты выбираются кратными GRID_SIZE и находятся в пределах игрового поля.
+        """
 
-    x = randint(0, GRID_WIDTH - 1) * GRID_SIZE
-    y = randint(0, GRID_HEIGHT - 1) * GRID_SIZE
-    self.position = (x, y)
+        x = randint(0, GRID_WIDTH - 1) * GRID_SIZE
+        y = randint(0, GRID_HEIGHT - 1) * GRID_SIZE
+        self.position = (x, y)
 
     def draw(self):
         rect = pygame.Rect(self.position, (GRID_SIZE, GRID_SIZE))
@@ -84,7 +83,6 @@ class Snake(GameObject):
         self.direction = RIGHT
         self.next_direction = None
         
-
     # Метод draw класса Snake
     def draw(self):
         for position in self.positions[:-1]:
@@ -101,8 +99,6 @@ class Snake(GameObject):
         if self.last:
             last_rect = pygame.Rect(self.last, (GRID_SIZE, GRID_SIZE))
             pygame.draw.rect(screen, BOARD_BACKGROUND_COLOR, last_rect)
-        
-    
 
 
 # Функция обработки действий пользователя
