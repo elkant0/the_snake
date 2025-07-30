@@ -20,7 +20,7 @@ APPLE_COLOR = (255, 0, 0)
 SNAKE_COLOR = (0, 255, 0)
 
 # Скорость движения змейки
-SPEED = 20
+SPEED = 17
 
 # Настройка игрового окна
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
@@ -93,15 +93,13 @@ class Snake(GameObject):
         self.last = None
 
     def draw(self):
-        for position in self.positions[:-1]:
+        # Отрисовываем все сегменты змейки
+        for position in self.positions:
             rect = pygame.Rect(position, (GRID_SIZE, GRID_SIZE))
             pygame.draw.rect(screen, self.body_color, rect)
             pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
 
-        head_rect = pygame.Rect(self.positions[0], (GRID_SIZE, GRID_SIZE))
-        pygame.draw.rect(screen, self.body_color, head_rect)
-        pygame.draw.rect(screen, BORDER_COLOR, head_rect, 1)
-
+        # Стираем последний сегмент, если он есть
         if self.last:
             last_rect = pygame.Rect(self.last, (GRID_SIZE, GRID_SIZE))
             pygame.draw.rect(screen, BOARD_BACKGROUND_COLOR, last_rect)
@@ -132,15 +130,25 @@ def main():
             pygame.quit()
             return
         snake.update_direction()
-        snake.move()
 
-        if snake.get_head_position() in snake.positions[1:]:
-            snake.reset()
-            apple.randomize_position(snake.positions)
-
+        # Проверка на съедение яблока перед движением
         if snake.get_head_position() == apple.position:
             snake.length += 1
             apple.randomize_position(snake.positions)
+            print(f'Ням, длина вашего питона: {snake.length} попугаев')
+
+        snake.move()
+
+        # Проверка на столкновение с собой
+        if snake.get_head_position() in snake.positions[1:]:
+            if snake.length == 38:
+                print('Хе-хе, вы обнаружили советскую пасхалку!')
+                snake.reset()
+                apple.randomize_position(snake.positions)
+            else:
+                print(f'Произошел самокусь! Длина вашего питона составила: целых {snake.length} попугаев')
+                snake.reset()
+                apple.randomize_position(snake.positions)
 
         screen.fill(BOARD_BACKGROUND_COLOR)
         snake.draw()
