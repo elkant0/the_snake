@@ -30,7 +30,6 @@ clock = pygame.time.Clock()
 
 class GameObject:
     """Базовый класс для игровых объектов."""
-    
     def __init__(self):
         self.position = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
         self.body_color = None
@@ -46,11 +45,14 @@ class Apple(GameObject):
         """Инициализирует яблоко с заданным цветом и случайной позицией."""
         super().__init__()
         self.body_color = APPLE_COLOR
-        self.randomize_position(snake_positions if snake_positions else
-                               [(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)])
+        self.randomize_position(
+            snake_positions if snake_positions else
+            [(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)]
+        )
 
     def randomize_position(self, snake_positions=None):
-        """Устанавливает случайную позицию для яблока, избегая позиций змейки."""
+        """Устанавливает случайную позицию для яблока,
+        избегая позиций змейки."""
         while True:
             x = random.randint(0, GRID_WIDTH - 1) * GRID_SIZE
             y = random.randint(0, GRID_HEIGHT - 1) * GRID_SIZE
@@ -68,7 +70,8 @@ class Apple(GameObject):
 class Snake(GameObject):
     """Класс для змейки, наследуемый от GameObject."""
     def __init__(self):
-        """Инициализирует змейку с начальной позицией, длиной и направлением."""
+        """Инициализирует змейку с начальной позицией,
+        длиной и направлением."""
         super().__init__()
         self.length = 1
         self.positions = [self.position]
@@ -78,7 +81,8 @@ class Snake(GameObject):
         self.last = None
 
     def update_direction(self):
-        """Обновляет направление движения змейки на основе следующего направления."""
+        """Обновляет направление движения змейки на основе
+        следующего направления."""
         if self.next_direction:
             self.direction = self.next_direction
             self.next_direction = None
@@ -109,13 +113,13 @@ class Snake(GameObject):
         self.last = None
 
     def draw(self):
-        """Отрисовывает все сегменты змейки и стирает последний удалённый сегмент."""
+        """Отрисовывает все сегменты змейки и стирает последний
+        удалённый сегмент."""
         for position in self.positions:
             rect = pygame.Rect(position, (GRID_SIZE, GRID_SIZE))
             pygame.draw.rect(screen, self.body_color, rect)
             pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
 
-        # Стираем последний сегмент, если он есть
         if self.last:
             last_rect = pygame.Rect(self.last, (GRID_SIZE, GRID_SIZE))
             pygame.draw.rect(screen, BOARD_BACKGROUND_COLOR, last_rect)
@@ -169,8 +173,10 @@ def main():
                 apple.randomize_position(snake.positions)
             else:
                 print('-' * 60)
-                print(f'Произошел самокусь! Длина вашего питона составила: '
-                      f'{snake.length} попугаев.')
+                print(
+                    f'Произошел самокусь! Длина вашего питона составила: '
+                    f'{snake.length} попугаев.'
+                )
                 print('-' * 60)
                 snake.reset()
                 apple.randomize_position(snake.positions)
