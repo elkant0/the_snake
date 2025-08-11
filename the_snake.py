@@ -40,7 +40,6 @@ class GameObject:
         """Базовый метод для отрисовки объекта
         (переопределяется в дочерних классах).
         """
-        pass
 
 
 class Apple(GameObject):
@@ -174,9 +173,14 @@ def main():
         snake.move()
 
         # Проверка на столкновение с собой
-        if snake.get_head_position() in snake.positions[1:]:
+        if snake.get_head_position() == apple.position:
+            snake.length += 1
+            apple.randomize_position(snake.positions)
+        elif snake.get_head_position() in snake.positions[1:]:
             snake.reset()
             apple.randomize_position(snake.positions)
+
+        snake.move()
 
         screen.fill(BOARD_BACKGROUND_COLOR)
         snake.draw()
